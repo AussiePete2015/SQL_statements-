@@ -25,7 +25,7 @@ SET @SQL = ''
 SELECT 
 @SQL = @SQL + 'Kill ' + Convert(varchar, SPId) + ';'
 FROM MASTER..SysProcesses
-WHERE DB_Name(dbid) = 'BI_SANDPIT' and hostname = 'D9913970' and SPID <> @@SPID
+WHERE DB_Name(dbid) = 'BI_SANDPIT' and hostname = '<locahost>' and SPID <> @@SPID
 
 Select @SQL
 
