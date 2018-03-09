@@ -1,0 +1,44 @@
+DROP VIEW VW_COG_SCHEDULELIST;
+
+/* Formatted on 19/Feb/16 11:04:30 AM (QP5 v5.287) */
+CREATE OR REPLACE FORCE VIEW VW_COG_SCHEDULELIST
+(
+   CMID,
+   SCHEDULE_NAME,
+   ACTIVE_FLAG,
+   SCHEDTYPE_FLAG,
+   SCHEDULE_TYPE,
+   TRIGGER_NAME,
+   PRIORITY,
+   CREATE_DATE,
+   MODIFY_DATE
+)
+AS
+     SELECT CMOBJECTS.CMID,
+            CMOBJNAMES_BASE.NAME AS "Cognos Schedules",
+            CMOBJPROPS2.ACTIVE,
+            CMOBJPROPS2.TYPE,
+            CASE CMOBJPROPS2.TYPE
+               WHEN 0 THEN 'By Day'
+               WHEN 1 THEN 'By Month'
+               WHEN 2 THEN 'By Month (Dayof)'
+               WHEN 4 THEN 'By Week'
+               WHEN 5 THEN 'By Year'
+               WHEN 6 THEN 'By Year (Dayof)'
+               WHEN 7 THEN 'Trigger'
+               ELSE 'Other'
+            END
+               SCHEDULE_Type,
+            CMOBJPROPS51.SCHEDTRIGNAME,
+            CMOBJPROPS2.PRIORITY,
+            CMOBJECTS.CREATED,
+            CMOBJECTS.MODIFIED
+       FROM PRODCOGNOS10_CS.CMOBJECTS,
+            PRODCOGNOS10_CS.CMOBJNAMES_BASE,
+            PRODCOGNOS10_CS.CMOBJPROPS2,
+            PRODCOGNOS10_CS.CMOBJPROPS51
+      WHERE     CMOBJNAMES_BASE.CMID = CMOBJECTS.pcmid
+            AND CMOBJECTS.CMID = CMOBJPROPS2.CMID
+            AND CMOBJPROPS51.CMID = CMOBJECTS.cmid
+            AND CMOBJECTS.CLASSID = 39
+   ORDER BY CMOBJECTS.MODIFIED DESC;
