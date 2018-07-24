@@ -77,4 +77,12 @@ from
 public.vehicle
 where
 length(vin) >= 17
+  and
+vin ~ '[A-Z0-9]*$'
+and
+vin !~ '[IOQ]'
+and
+vin !~ '^[0-9]*$'
+and
+vin ~ '[^.-]$'
 ) v1;
